@@ -1,0 +1,20 @@
+{
+    "name": "大白",
+    "short_name": "大白",
+    "icons": [
+        {
+            "src": "guaizhangtang.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "hanbao.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#fff",
+    "background_color": "#fff",
+    "display": "standalone",
+    "start_url": "/"
+}
