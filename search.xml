@@ -1,27 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Hello World</title>
-    <url>/2023/11/07/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+    <title>使用 goland 打开 golang 以 vendor 作为包管理的项目,无法识别包依赖的问题</title>
+    <url>/2023/11/21/go-vendor-project-how-to-open/</url>
+    <content><![CDATA[<h2 id="GoPath"><a href="#GoPath" class="headerlink" title="GoPath"></a>GoPath</h2><ul>
+<li>需要在 file -&gt; settings -&gt; go -&gt; go path -&gt; project gopath 中新增当前项目的目录,并且勾选当前的两个选项。<br><img src="/../images/go_vendor_2.png" alt="新增 go path" loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></li>
+</ul>
+<h2 id="GoModules"><a href="#GoModules" class="headerlink" title="GoModules"></a>GoModules</h2><ul>
+<li>取消 go modules 的勾选<br><img src="/../images/go_vendor_1.png" alt="go modules 取消勾选" loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></li>
+<li>此时项目即可识别对应的包依赖。</li>
+</ul>
 ]]></content>
       <categories>
-        <category>测试分类</category>
+        <category>golang</category>
       </categories>
       <tags>
-        <tag>测试标签</tag>
+        <tag>golang,vendor</tag>
       </tags>
   </entry>
 </search>
