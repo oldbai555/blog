@@ -24,6 +24,36 @@
       </tags>
   </entry>
   <entry>
+    <title>Go Debug 工具</title>
+    <url>/2023/11/23/go-runtime-dlv-tool/</url>
+    <content><![CDATA[<h2 id="Go-debug-工具-可以在本地调试远端项目"><a href="#Go-debug-工具-可以在本地调试远端项目" class="headerlink" title="Go debug 工具: 可以在本地调试远端项目"></a>Go debug 工具: 可以在本地调试远端项目</h2><h2 id="地址"><a href="#地址" class="headerlink" title="地址"></a>地址</h2><ul>
+<li><a href="https://github.com/go-delve/delve">go-delve</a></li>
+</ul>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><ul>
+<li><a href="https://github.com/go-delve/delve/tree/master/Documentation/installation">installation</a></li>
+</ul>
+<h2 id="演示操作"><a href="#演示操作" class="headerlink" title="演示操作"></a>演示操作</h2><ul>
+<li>安装 <code>go install github.com/go-delve/delve/cmd/dlv@master</code></li>
+<li>把安装的文件放入 go&#x2F;bin 目录下</li>
+<li>运行命令</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">--注意 <span class="variable">$1</span> 是 启动 go 进程的名字   2345 是服务监听的端口 这里写哪个端口 goland 中就要配置哪个端口，其他参数可以通过 执行 dlv 查看帮助信息</span></span><br><span class="line">dlv attach $(ps -A | grep &quot;$1&quot; | awk &#x27;&#123;print $1&#125;&#x27;) --headless --listen=:2345 --api-version=2 --accept-multiclient</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>goland 进行远程调试<br><img src="/../images/go_runtime_dlv_tool.png" alt="step1" loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'><br><img src="/../images/go_runtime_dlv_tool_1.png" alt="step2" loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></li>
+<li>运行即可， 在需要的代码位置打断点即可。</li>
+<li>Debug小技巧：右键断点可以添加断点条件,符合条件才会开始debug。<br><img src="/../images/go_runtime_dlv_tool_2.png" alt="step3" loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></li>
+</ul>
+]]></content>
+      <categories>
+        <category>golang</category>
+      </categories>
+      <tags>
+        <tag>golang</tag>
+        <tag>debug</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>使用 goland 打开 golang 以 vendor 作为包管理的项目,无法识别包依赖的问题</title>
     <url>/2023/11/21/go-vendor-project-how-to-open/</url>
     <content><![CDATA[<h2 id="GoPath"><a href="#GoPath" class="headerlink" title="GoPath"></a>GoPath</h2><ul>
