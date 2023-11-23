@@ -1,29 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>在Go 程序在运行时遇到panic导致的宕机,输出宕机日志</title>
-    <url>/2023/11/23/go-runtime-crash-log/</url>
-    <content><![CDATA[<h2 id="GO：panic时core的生成-GOTRACEBACK"><a href="#GO：panic时core的生成-GOTRACEBACK" class="headerlink" title="GO：panic时core的生成(GOTRACEBACK)"></a>GO：panic时core的生成(GOTRACEBACK)</h2><h3 id="编写测试代码"><a href="#编写测试代码" class="headerlink" title="编写测试代码"></a>编写测试代码</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="built_in">panic</span>(<span class="string">&quot;hello world!&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="以-nohup-运行Go程序为例"><a href="#以-nohup-运行Go程序为例" class="headerlink" title="以 nohup 运行Go程序为例"></a>以 nohup 运行Go程序为例</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nohup env GOTRACEBACK=crash go run main.go &gt; /dev/null 2&gt; crash.core.log &amp;</span><br></pre></td></tr></table></figure>
-<h3 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h3><p>  <img src="/../images/go_runtime_crash_log_1.png" alt="文件目录" loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p>
-<h3 id="文件内容截图"><a href="#文件内容截图" class="headerlink" title="文件内容截图"></a>文件内容截图</h3><p><img src="/../images/go_runtime_crash_log_2.png" alt="img.png" loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p>
-<h3 id="命令模板"><a href="#命令模板" class="headerlink" title="命令模板"></a>命令模板</h3><ul>
-<li><code>nohup env GOTRACEBACK=crash [command]&gt; /dev/null 2&gt; crash.core..log &amp;</code></li>
-</ul>
-<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ul>
-<li><a href="https://www.runoob.com/linux/linux-comm-nohup.html">nohup 命令</a></li>
-<li><a href="https://www.cnblogs.com/tinywan/p/6025468.html">&#x2F;dev&#x2F;null 说明</a></li>
-</ul>
-]]></content>
-      <categories>
-        <category>golang</category>
-      </categories>
-      <tags>
-        <tag>golang</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Go Debug 工具</title>
     <url>/2023/11/23/go-runtime-dlv-tool/</url>
     <content><![CDATA[<h2 id="Go-debug-工具-可以在本地调试远端项目"><a href="#Go-debug-工具-可以在本地调试远端项目" class="headerlink" title="Go debug 工具: 可以在本地调试远端项目"></a>Go debug 工具: 可以在本地调试远端项目</h2><h2 id="地址"><a href="#地址" class="headerlink" title="地址"></a>地址</h2><ul>
@@ -71,5 +48,52 @@
         <tag>golang</tag>
         <tag>vendor</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>在Go 程序在运行时遇到panic导致的宕机,输出宕机日志</title>
+    <url>/2023/11/23/go-runtime-crash-log/</url>
+    <content><![CDATA[<h2 id="GO：panic时core的生成-GOTRACEBACK"><a href="#GO：panic时core的生成-GOTRACEBACK" class="headerlink" title="GO：panic时core的生成(GOTRACEBACK)"></a>GO：panic时core的生成(GOTRACEBACK)</h2><h3 id="编写测试代码"><a href="#编写测试代码" class="headerlink" title="编写测试代码"></a>编写测试代码</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="built_in">panic</span>(<span class="string">&quot;hello world!&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="以-nohup-运行Go程序为例"><a href="#以-nohup-运行Go程序为例" class="headerlink" title="以 nohup 运行Go程序为例"></a>以 nohup 运行Go程序为例</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nohup env GOTRACEBACK=crash go run main.go &gt; /dev/null 2&gt; crash.core.log &amp;</span><br></pre></td></tr></table></figure>
+<h3 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h3><p>  <img src="/../images/go_runtime_crash_log_1.png" alt="文件目录" loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p>
+<h3 id="文件内容截图"><a href="#文件内容截图" class="headerlink" title="文件内容截图"></a>文件内容截图</h3><p><img src="/../images/go_runtime_crash_log_2.png" alt="img.png" loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p>
+<h3 id="命令模板"><a href="#命令模板" class="headerlink" title="命令模板"></a>命令模板</h3><ul>
+<li><code>nohup env GOTRACEBACK=crash [command]&gt; /dev/null 2&gt; crash.core..log &amp;</code></li>
+</ul>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ul>
+<li><a href="https://www.runoob.com/linux/linux-comm-nohup.html">nohup 命令</a></li>
+<li><a href="https://www.cnblogs.com/tinywan/p/6025468.html">&#x2F;dev&#x2F;null 说明</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>golang</category>
+      </categories>
+      <tags>
+        <tag>golang</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go 程序发版脚本 - supervisor</title>
+    <url>/2023/11/23/go-develop-script/</url>
+    <content><![CDATA[<h2 id="安装-supervisor-已安装可跳过"><a href="#安装-supervisor-已安装可跳过" class="headerlink" title="安装 supervisor (已安装可跳过)"></a>安装 supervisor (已安装可跳过)</h2><ul>
+<li>环境 ubuntu</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">ubuntu 安装</span></span><br><span class="line">apt install -y supervisor</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">开机自启</span></span><br><span class="line">systemctl enable supervisor</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">开始运行</span></span><br><span class="line">systemctl start supervisor</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看服务状态</span></span><br><span class="line">systemctl status supervisor</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看是否存在进程</span></span><br><span class="line">ps -aux | grep supervisor</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">supervisord 的配置文件默认位于 /etc/supervisord.conf</span></span><br><span class="line">ls /etc/supervisord.conf</span><br></pre></td></tr></table></figure>
+
+<h2 id="日志打印脚本"><a href="#日志打印脚本" class="headerlink" title="日志打印脚本"></a>日志打印脚本</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">BL=&quot;\033[36m&quot; # 日志消息</span><br><span class="line">GR=&quot;\033[32m&quot; # 成功消息</span><br><span class="line">YL=&quot;\033[33m&quot; # 告警消息</span><br><span class="line">RD=&quot;\033[31m&quot; # 错误消息</span><br><span class="line">PL=&#x27;\033[0m&#x27;</span><br><span class="line"></span><br><span class="line">LOG() &#123;</span><br><span class="line">  echo -e &quot;$&#123;BL&#125;[LOG]$1$&#123;PL&#125;&quot;</span><br><span class="line">&#125;</span><br><span class="line">INFO() &#123;</span><br><span class="line">  echo -e &quot;$&#123;GR&#125;[INFO]$1$&#123;PL&#125;&quot;</span><br><span class="line">&#125;</span><br><span class="line">ERROR() &#123;</span><br><span class="line">  echo -e &quot;$&#123;RD&#125;[ERROR]$1$&#123;PL&#125;&quot;</span><br><span class="line">&#125;</span><br><span class="line">WANF() &#123;</span><br><span class="line">  echo -e &quot;$&#123;YL&#125;[WANF]$1$&#123;PL&#125;&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="go-打包脚本"><a href="#go-打包脚本" class="headerlink" title="go 打包脚本"></a>go 打包脚本</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">go_build_by_linux() &#123;</span><br><span class="line"><span class="meta prompt_">  # </span><span class="language-bash">构建Linux版本</span></span><br><span class="line">  export GOOS=linux</span><br><span class="line">  export GOARCH=amd64</span><br><span class="line"></span><br><span class="line">  go build -o $&#123;输出名&#125; $&#123;程序所在目录&#125;</span><br><span class="line"></span><br><span class="line">  unset GOOS</span><br><span class="line">  unset GOARCH</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">go_build_by_windows() &#123;</span><br><span class="line"><span class="meta prompt_">  # </span><span class="language-bash">构建Windows版本</span></span><br><span class="line">  export GOOS=windows</span><br><span class="line">  export GOARCH=amd64</span><br><span class="line"></span><br><span class="line">  go build -o $1.exe $2</span><br><span class="line"></span><br><span class="line">  unset GOOS</span><br><span class="line">  unset GOARCH</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="supervisor-模板输出"><a href="#supervisor-模板输出" class="headerlink" title="supervisor 模板输出"></a>supervisor 模板输出</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">用于 supervisor 管理进程</span></span><br><span class="line">function output() &#123;</span><br><span class="line">    echo \</span><br><span class="line">&quot;[program:$&#123;app_name&#125;] ;</span><br><span class="line">directory=$&#123;app_dir&#125; ;</span><br><span class="line">command=$&#123;app_dir&#125;/$&#123;app_name&#125; ;</span><br><span class="line">autostart=true ;</span><br><span class="line">autorestart=true ;</span><br><span class="line">startsecs=10 ;</span><br><span class="line">startretries=3 ;</span><br><span class="line">user=root ;</span><br><span class="line">redirect_stderr=true ;</span><br><span class="line">stdout_logfile=$&#123;log_dir&#125;/$&#123;app_name&#125;_stdout.log ;</span><br><span class="line">stdout_logfile_maxbytes=20MB ;</span><br><span class="line">stdout_logfile_backups=20 ;</span><br><span class="line">&quot; &gt;$&#123;app_name&#125;.ini</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">启动命令</span></span><br><span class="line">supervisorctl start $&#123;app_name&#125; ;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">更新命令</span></span><br><span class="line">supervisorctl update ;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重启命令</span></span><br><span class="line">supervisorctl restart $&#123;app_name&#125; ;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看状态</span></span><br><span class="line">supervisorctl status $&#123;app_name&#125; ;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="打包"><a href="#打包" class="headerlink" title="打包"></a>打包</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">打包</span></span><br><span class="line">function tar_pack() &#123;</span><br><span class="line"><span class="meta prompt_">  # </span><span class="language-bash">可以配制多个 [原文件名/目录名] 打成一个包</span></span><br><span class="line">  tar -Jcvf $&#123;目标文件名&#125;.tar.xz --exclude=&quot;.*&quot; [$&#123;原文件名/目录名&#125; ...]</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">解包</span></span><br><span class="line">function tar_extract() &#123;</span><br><span class="line">  tar -Jxvf [原文件名].tar.xz</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="scp"><a href="#scp" class="headerlink" title="scp"></a>scp</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">function upload()&#123;</span><br><span class="line">  sshpass -p$&#123;password&#125; scp -P$&#123;port&#125; $&#123;本地文件名&#125; $&#123;user&#125;@$&#123;ip&#125;:$&#123;远程目录&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function download()&#123;</span><br><span class="line">    scp $&#123;user&#125;@$&#123;ip&#125;:$&#123;远程文件&#125; $&#123;本地目录&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="ssh-执行远端命令"><a href="#ssh-执行远端命令" class="headerlink" title="ssh 执行远端命令"></a>ssh 执行远端命令</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">function do_ssh_command() &#123;</span><br><span class="line">    sshpass -p $&#123;password&#125; ssh -P$&#123;port&#125; $&#123;user&#125;@$&#123;ip&#125; &#x27;[command]&#x27;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="创建目录"><a href="#创建目录" class="headerlink" title="创建目录"></a>创建目录</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mkdirIfNotExist() &#123;</span><br><span class="line">  stat $&#123;目录&#125;</span><br><span class="line">  if [ $? = 1 ]; then</span><br><span class="line">    mkdir -p &quot;$&#123;目录&#125;&quot;</span><br><span class="line">  fi</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="示例-组合脚本"><a href="#示例-组合脚本" class="headerlink" title="示例-组合脚本"></a>示例-组合脚本</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">先创建临时目录</span></span><br><span class="line">mkdirIfNotExist $&#123;临时目录&#125;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">打包 Go 程序</span></span><br><span class="line">go_build_by_linux $&#123;输出名&#125; $&#123;程序所在目录&#125;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">输出 supervisor 管理进程模板</span></span><br><span class="line">output $&#123;app_name&#125; $&#123;app_dir&#125; $&#123;log_dir&#125;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">将Go程序包和supervisor管理进程模板放入临时目录</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">将临时目录打包</span></span><br><span class="line">tar_pack $&#123;目标文件名&#125; $&#123;临时目录&#125;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">上传至目标机器</span></span><br><span class="line">upload </span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">进入目标机器</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">解压包</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">分发内容到对应目录</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">supervisor 更新 启动</span></span><br><span class="line">do_ssh_command $&#123;命令&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
   </entry>
 </search>
