@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>frp 内外网穿透</title>
+    <url>/2024/09/20/frp/</url>
+    <content><![CDATA[<h2 id="1-链接"><a href="#1-链接" class="headerlink" title="1. 链接"></a>1. 链接</h2><ul>
+<li>在下载链接下载对应系统的压缩包，解压在指定目录。</li>
+</ul>
+<h2 id="2-服务端"><a href="#2-服务端" class="headerlink" title="2. 服务端"></a>2. 服务端</h2><ul>
+<li>编辑 frps.toml</li>
+</ul>
+<figure class="highlight toml"><table><tr><td class="code"><pre><span class="line"><span class="attr">bindPort</span> = <span class="number">9847</span> <span class="comment"># 客户端链接端口</span></span><br><span class="line"><span class="attr">vhostHTTPPort</span> = <span class="number">9848</span> <span class="comment"># 虚拟 http 端口</span></span><br><span class="line"><span class="attr">auth.token</span> = <span class="string">&#x27;mypass@123&#x27;</span> <span class="comment"># 客户端链接的密码, 自行设置</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 网页端 用于监控链接详情</span></span><br><span class="line"><span class="attr">webServer.addr</span> = <span class="string">&quot;0.0.0.0&quot;</span> </span><br><span class="line"><span class="attr">webServer.user</span> = <span class="string">&quot;myFrp&quot;</span></span><br><span class="line"><span class="attr">webServer.password</span> = <span class="string">&quot;mypass@123&quot;</span></span><br><span class="line"><span class="attr">webServer.port</span> = <span class="number">9488</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>启动</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./frps -c ./frps.toml</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>挂载在 systemctl ，将 frps.service 放入 &#x2F;etc&#x2F;systemd&#x2F;system 下</li>
+</ul>
+<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Frp Server Service</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=simple</span><br><span class="line">ExecStart=frps所在目录/frps -c frps.toml所在目录/frps.toml</span><br><span class="line">Restart=on-failure</span><br><span class="line">RestartSec=5s</span><br><span class="line">User=ubuntu</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>执行命令</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">systemctl enable frps.service</span><br><span class="line">systemctl start frps.service</span><br><span class="line">systemctl status frps.service</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-客户端"><a href="#3-客户端" class="headerlink" title="3. 客户端"></a>3. 客户端</h2><ul>
+<li>编辑 frpc.toml</li>
+</ul>
+<figure class="highlight toml"><table><tr><td class="code"><pre><span class="line"><span class="attr">serverAddr</span> = <span class="string">&quot;&quot;</span> <span class="comment"># 公网服务端 IP 访问地址</span></span><br><span class="line"><span class="attr">serverPort</span> = <span class="number">9847</span> <span class="comment"># 与远程绑定的端口相同</span></span><br><span class="line"><span class="attr">auth.token</span> = <span class="string">&quot;&quot;</span> <span class="comment"># 客户端链接的密码</span></span><br><span class="line"></span><br><span class="line"><span class="section">[[proxies]]</span></span><br><span class="line"><span class="attr">name</span> = <span class="string">&quot;test-tcp&quot;</span> <span class="comment"># 代理名称(随便填)</span></span><br><span class="line"><span class="attr">type</span> = <span class="string">&quot;tcp&quot;</span> <span class="comment"># 代理类型</span></span><br><span class="line"><span class="attr">localIP</span> = <span class="string">&quot;&quot;</span> <span class="comment"># 代理地址, 要转发到哪个地址(本地服务地址)</span></span><br><span class="line">localPort =  <span class="comment"># 代理端口, 要转发到哪个端口(本地服务端口)</span></span><br><span class="line">remotePort = <span class="comment"># 远程代理到公网的端口，服务端与客户端连接的桥梁(此端口记得进行端口开放，避免连接不上)</span></span><br><span class="line"></span><br><span class="line"><span class="section">[[proxies]]</span></span><br><span class="line"><span class="attr">name</span> = <span class="string">&quot;test-http&quot;</span></span><br><span class="line"><span class="attr">type</span> = <span class="string">&quot;http&quot;</span></span><br><span class="line">localPort = <span class="comment">#  代理端口, 要转发到哪个端口(本地服务端口)</span></span><br><span class="line"><span class="attr">customDomains</span> = [<span class="string">&quot;公网服务器 IP 访问地址&quot;</span>]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>启动</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">./frpc -c frpc.toml</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>frp</category>
+      </categories>
+      <tags>
+        <tag>frp</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go 程序发版脚本 - supervisor</title>
+    <url>/2023/11/23/go-develop-script/</url>
+    <content><![CDATA[<h2 id="安装-supervisor-已安装可跳过"><a href="#安装-supervisor-已安装可跳过" class="headerlink" title="安装 supervisor (已安装可跳过)"></a>安装 supervisor (已安装可跳过)</h2><ul>
+<li>环境 ubuntu</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">ubuntu 安装</span></span><br><span class="line">apt install -y supervisor</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">开机自启</span></span><br><span class="line">systemctl enable supervisor</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">开始运行</span></span><br><span class="line">systemctl start supervisor</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看服务状态</span></span><br><span class="line">systemctl status supervisor</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看是否存在进程</span></span><br><span class="line">ps -aux | grep supervisor</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">supervisord 的配置文件默认位于 /etc/supervisord.conf</span></span><br><span class="line">ls /etc/supervisord.conf</span><br></pre></td></tr></table></figure>
+
+<h2 id="日志打印脚本"><a href="#日志打印脚本" class="headerlink" title="日志打印脚本"></a>日志打印脚本</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">BL=&quot;\033[36m&quot; # 日志消息</span><br><span class="line">GR=&quot;\033[32m&quot; # 成功消息</span><br><span class="line">YL=&quot;\033[33m&quot; # 告警消息</span><br><span class="line">RD=&quot;\033[31m&quot; # 错误消息</span><br><span class="line">PL=&#x27;\033[0m&#x27;</span><br><span class="line"></span><br><span class="line">LOG() &#123;</span><br><span class="line">  echo -e &quot;$&#123;BL&#125;[LOG]$1$&#123;PL&#125;&quot;</span><br><span class="line">&#125;</span><br><span class="line">INFO() &#123;</span><br><span class="line">  echo -e &quot;$&#123;GR&#125;[INFO]$1$&#123;PL&#125;&quot;</span><br><span class="line">&#125;</span><br><span class="line">ERROR() &#123;</span><br><span class="line">  echo -e &quot;$&#123;RD&#125;[ERROR]$1$&#123;PL&#125;&quot;</span><br><span class="line">&#125;</span><br><span class="line">WANF() &#123;</span><br><span class="line">  echo -e &quot;$&#123;YL&#125;[WANF]$1$&#123;PL&#125;&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="go-打包脚本"><a href="#go-打包脚本" class="headerlink" title="go 打包脚本"></a>go 打包脚本</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">go_build_by_linux() &#123;</span><br><span class="line"><span class="meta prompt_">  # </span><span class="language-bash">构建Linux版本</span></span><br><span class="line">  export GOOS=linux</span><br><span class="line">  export GOARCH=amd64</span><br><span class="line"></span><br><span class="line">  go build -o $&#123;输出名&#125; $&#123;程序所在目录&#125;</span><br><span class="line"></span><br><span class="line">  unset GOOS</span><br><span class="line">  unset GOARCH</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">go_build_by_windows() &#123;</span><br><span class="line"><span class="meta prompt_">  # </span><span class="language-bash">构建Windows版本</span></span><br><span class="line">  export GOOS=windows</span><br><span class="line">  export GOARCH=amd64</span><br><span class="line"></span><br><span class="line">  go build -o $1.exe $2</span><br><span class="line"></span><br><span class="line">  unset GOOS</span><br><span class="line">  unset GOARCH</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="supervisor-模板输出"><a href="#supervisor-模板输出" class="headerlink" title="supervisor 模板输出"></a>supervisor 模板输出</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">用于 supervisor 管理进程</span></span><br><span class="line">function output() &#123;</span><br><span class="line">    echo \</span><br><span class="line">&quot;[program:$&#123;app_name&#125;] ;</span><br><span class="line">directory=$&#123;app_dir&#125; ;</span><br><span class="line">command=$&#123;app_dir&#125;/$&#123;app_name&#125; ;</span><br><span class="line">autostart=true ;</span><br><span class="line">autorestart=true ;</span><br><span class="line">startsecs=10 ;</span><br><span class="line">startretries=3 ;</span><br><span class="line">user=root ;</span><br><span class="line">redirect_stderr=true ;</span><br><span class="line">stdout_logfile=$&#123;log_dir&#125;/$&#123;app_name&#125;_stdout.log ;</span><br><span class="line">stdout_logfile_maxbytes=20MB ;</span><br><span class="line">stdout_logfile_backups=20 ;</span><br><span class="line">&quot; &gt;$&#123;app_name&#125;.ini</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">启动命令</span></span><br><span class="line">supervisorctl start $&#123;app_name&#125; ;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">更新命令</span></span><br><span class="line">supervisorctl update ;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重启命令</span></span><br><span class="line">supervisorctl restart $&#123;app_name&#125; ;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看状态</span></span><br><span class="line">supervisorctl status $&#123;app_name&#125; ;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="打包"><a href="#打包" class="headerlink" title="打包"></a>打包</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">打包</span></span><br><span class="line">function tar_pack() &#123;</span><br><span class="line"><span class="meta prompt_">  # </span><span class="language-bash">可以配制多个 [原文件名/目录名] 打成一个包</span></span><br><span class="line">  tar -Jcvf $&#123;目标文件名&#125;.tar.xz --exclude=&quot;.*&quot; [$&#123;原文件名/目录名&#125; ...]</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">解包</span></span><br><span class="line">function tar_extract() &#123;</span><br><span class="line">  tar -Jxvf [原文件名].tar.xz</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="scp"><a href="#scp" class="headerlink" title="scp"></a>scp</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">function upload()&#123;</span><br><span class="line">  sshpass -p$&#123;password&#125; scp -P$&#123;port&#125; $&#123;本地文件名&#125; $&#123;user&#125;@$&#123;ip&#125;:$&#123;远程目录&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function download()&#123;</span><br><span class="line">    scp $&#123;user&#125;@$&#123;ip&#125;:$&#123;远程文件&#125; $&#123;本地目录&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="ssh-执行远端命令"><a href="#ssh-执行远端命令" class="headerlink" title="ssh 执行远端命令"></a>ssh 执行远端命令</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">function do_ssh_command() &#123;</span><br><span class="line">    sshpass -p $&#123;password&#125; ssh -P$&#123;port&#125; $&#123;user&#125;@$&#123;ip&#125; &#x27;[command]&#x27;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="创建目录"><a href="#创建目录" class="headerlink" title="创建目录"></a>创建目录</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mkdirIfNotExist() &#123;</span><br><span class="line">  stat $&#123;目录&#125;</span><br><span class="line">  if [ $? = 1 ]; then</span><br><span class="line">    mkdir -p &quot;$&#123;目录&#125;&quot;</span><br><span class="line">  fi</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="示例-组合脚本"><a href="#示例-组合脚本" class="headerlink" title="示例-组合脚本"></a>示例-组合脚本</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">先创建临时目录</span></span><br><span class="line">mkdirIfNotExist $&#123;临时目录&#125;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">打包 Go 程序</span></span><br><span class="line">go_build_by_linux $&#123;输出名&#125; $&#123;程序所在目录&#125;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">输出 supervisor 管理进程模板</span></span><br><span class="line">output $&#123;app_name&#125; $&#123;app_dir&#125; $&#123;log_dir&#125;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">将Go程序包和supervisor管理进程模板放入临时目录</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">将临时目录打包</span></span><br><span class="line">tar_pack $&#123;目标文件名&#125; $&#123;临时目录&#125;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">上传至目标机器</span></span><br><span class="line">upload </span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">进入目标机器</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">解压包</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">分发内容到对应目录</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">supervisor 更新 启动</span></span><br><span class="line">do_ssh_command $&#123;命令&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>golang</category>
+      </categories>
+      <tags>
+        <tag>golang</tag>
+        <tag>supervisor</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在Go 程序在运行时遇到panic导致的宕机,输出宕机日志</title>
+    <url>/2023/11/23/go-runtime-crash-log/</url>
+    <content><![CDATA[<h2 id="GO：panic时core的生成-GOTRACEBACK"><a href="#GO：panic时core的生成-GOTRACEBACK" class="headerlink" title="GO：panic时core的生成(GOTRACEBACK)"></a>GO：panic时core的生成(GOTRACEBACK)</h2><h3 id="编写测试代码"><a href="#编写测试代码" class="headerlink" title="编写测试代码"></a>编写测试代码</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="built_in">panic</span>(<span class="string">&quot;hello world!&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="以-nohup-运行Go程序为例"><a href="#以-nohup-运行Go程序为例" class="headerlink" title="以 nohup 运行Go程序为例"></a>以 nohup 运行Go程序为例</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nohup env GOTRACEBACK=crash go run main.go &gt; /dev/null 2&gt; crash.core.log &amp;</span><br></pre></td></tr></table></figure>
+<h3 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h3><p>  <img src="/../images/go_runtime_crash_log_1.png" alt="文件目录" loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p>
+<h3 id="文件内容截图"><a href="#文件内容截图" class="headerlink" title="文件内容截图"></a>文件内容截图</h3><p><img src="/../images/go_runtime_crash_log_2.png" alt="img.png" loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p>
+<h3 id="命令模板"><a href="#命令模板" class="headerlink" title="命令模板"></a>命令模板</h3><ul>
+<li><code>nohup env GOTRACEBACK=crash [command]&gt; /dev/null 2&gt; crash.core.log &amp;</code></li>
+</ul>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ul>
+<li><a href="https://www.runoob.com/linux/linux-comm-nohup.html">nohup 命令</a></li>
+<li><a href="https://www.cnblogs.com/tinywan/p/6025468.html">&#x2F;dev&#x2F;null 说明</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>golang</category>
+      </categories>
+      <tags>
+        <tag>golang</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go Debug 工具</title>
+    <url>/2023/11/23/go-runtime-dlv-tool/</url>
+    <content><![CDATA[<h2 id="Go-debug-工具-可以在本地调试远端项目"><a href="#Go-debug-工具-可以在本地调试远端项目" class="headerlink" title="Go debug 工具: 可以在本地调试远端项目"></a>Go debug 工具: 可以在本地调试远端项目</h2><h2 id="地址"><a href="#地址" class="headerlink" title="地址"></a>地址</h2><ul>
+<li><a href="https://github.com/go-delve/delve">go-delve</a></li>
+</ul>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><ul>
+<li><a href="https://github.com/go-delve/delve/tree/master/Documentation/installation">installation</a></li>
+</ul>
+<h2 id="演示操作"><a href="#演示操作" class="headerlink" title="演示操作"></a>演示操作</h2><ul>
+<li>安装 <code>go install github.com/go-delve/delve/cmd/dlv@master</code></li>
+<li>把安装的文件放入 go&#x2F;bin 目录下</li>
+<li>运行命令</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">--注意 <span class="variable">$1</span> 是 启动 go 进程的名字   2345 是服务监听的端口 这里写哪个端口 goland 中就要配置哪个端口，其他参数可以通过 执行 dlv 查看帮助信息</span></span><br><span class="line">dlv attach $(ps -A | grep &quot;$1&quot; | awk &#x27;&#123;print $1&#125;&#x27;) --headless --listen=:2345 --api-version=2 --accept-multiclient</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>goland 进行远程调试<br><img src="/../images/go_runtime_dlv_tool.png" alt="step1" loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'><br><img src="/../images/go_runtime_dlv_tool_1.png" alt="step2" loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></li>
+<li>运行即可， 在需要的代码位置打断点即可。</li>
+<li>Debug小技巧：右键断点可以添加断点条件,符合条件才会开始debug。<br><img src="/../images/go_runtime_dlv_tool_2.png" alt="step3" loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></li>
+</ul>
+]]></content>
+      <categories>
+        <category>golang</category>
+      </categories>
+      <tags>
+        <tag>golang</tag>
+        <tag>debug</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用 goland 打开 golang 以 vendor 作为包管理的项目,无法识别包依赖的问题</title>
+    <url>/2023/11/21/go-vendor-project-how-to-open/</url>
+    <content><![CDATA[<h2 id="GoPath"><a href="#GoPath" class="headerlink" title="GoPath"></a>GoPath</h2><ul>
+<li>需要在 file -&gt; settings -&gt; go -&gt; go path -&gt; project gopath 中新增当前项目的目录,并且勾选当前的两个选项。<br><img src="/../images/go_vendor_2.png" alt="新增 go path" loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></li>
+</ul>
+<h2 id="GoModules"><a href="#GoModules" class="headerlink" title="GoModules"></a>GoModules</h2><ul>
+<li>取消 go modules 的勾选<br><img src="/../images/go_vendor_1.png" alt="go modules 取消勾选" loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></li>
+<li>此时项目即可识别对应的包依赖。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>golang</category>
+      </categories>
+      <tags>
+        <tag>golang</tag>
+        <tag>vendor</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>一个简单的日志搜索脚本</title>
+    <url>/2023/12/02/log-search-keyworks-script/</url>
+    <content><![CDATA[<ul>
+<li>直接上脚本</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">if [[ &quot;$1&quot; == &quot;&quot; ]]; then</span><br><span class="line">  echo &quot;usage: greplog.sh &lt;options&gt; &lt;keyword&gt;&quot;</span><br><span class="line">  echo &quot;&lt;options&gt;&quot;</span><br><span class="line">  echo &quot;-t 默认当前年月日时&quot;</span><br><span class="line">  echo &quot;-t [前x小时]&quot;</span><br><span class="line">  echo &quot;-t [指定日小时 例如 0114]&quot;</span><br><span class="line">  echo &quot;-t [指定月日小时 例如 120114]&quot;</span><br><span class="line">  exit 1</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">D=</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">传入的参数</span></span><br><span class="line">args=(&quot;$@&quot;)</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">grep 过滤的条件</span></span><br><span class="line">args_filter=()</span><br><span class="line">LOG=</span><br><span class="line">LOGDIR=/tmp/lb/log/</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">遍历传入的参数 进行拼接</span></span><br><span class="line">for ((i = 0; i &lt; $&#123;#args[@]&#125;; i++)); do</span><br><span class="line">  if [[ &quot;$&#123;args[$i]&#125;&quot; == &quot;-t&quot; ]]; then</span><br><span class="line">    n=$(($i + 1))</span><br><span class="line">    D=&quot;$&#123;args[$n]&#125;&quot;</span><br><span class="line">    i=$(($i + 1))</span><br><span class="line">  else</span><br><span class="line">    args_filter[$&#123;#args_filter[@]&#125;]=&quot;$&#123;args[$i]&#125;&quot;</span><br><span class="line">  fi</span><br><span class="line">done</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">初始默认的日志文件筛选参数</span></span><br><span class="line">if [[ &quot;$D&quot; == &quot;&quot; ]]; then</span><br><span class="line">  D=&quot;0&quot;</span><br><span class="line">fi</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">开始拼接筛选日志文件的条件</span></span><br><span class="line">if [ $D -eq &quot;0&quot; ]; then</span><br><span class="line">  LOG=$(date &quot;+%Y%m%d%H&quot;)&quot;.log&quot;</span><br><span class="line">elif [ $&#123;#D&#125; -eq 1 ]; then</span><br><span class="line">  LOG=$(date -d &quot;-$&#123;D&#125; hour&quot; +%Y%m%d%H)&quot;.log&quot;</span><br><span class="line">elif [ $&#123;#D&#125; -eq 2 ]; then</span><br><span class="line">  LOG=$(date -d &quot;-$&#123;D&#125; hour&quot; +%Y%m%d%H)&quot;.log&quot;</span><br><span class="line">elif [ $&#123;#D&#125; -eq 3 ]; then</span><br><span class="line">  D=0$D</span><br><span class="line">  LOG=$(date &quot;+%Y%m&quot;)$D&quot;.log&quot;</span><br><span class="line">elif [ $&#123;#D&#125; -eq 4 ]; then</span><br><span class="line">  LOG=$(date &quot;+%Y%m&quot;)$D&quot;.log&quot;</span><br><span class="line">elif [ $&#123;#D&#125; -eq 5 ]; then</span><br><span class="line">  D=0$D</span><br><span class="line">  LOG=$(date &quot;+%Y&quot;)$D&quot;.log&quot;</span><br><span class="line">elif [ $&#123;#D&#125; -eq 6 ]; then</span><br><span class="line">  LOG=$(date &quot;+%Y&quot;)$D&quot;.log&quot;</span><br><span class="line">fi</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">拼装日志文件目录</span></span><br><span class="line">LOG=$LOGDIR&quot;*&quot;$LOG</span><br><span class="line">LOG=$&#123;LOG//\\/\/&#125;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看目录是否有日志文件</span></span><br><span class="line">NLOG=$(ls $LOG | wc -l)</span><br><span class="line">if [ $NLOG -eq 0 ]; then</span><br><span class="line">  echo</span><br><span class="line">  echo &quot;file $LOG not existed, stop&quot;</span><br><span class="line">  echo</span><br><span class="line">  exit 1</span><br><span class="line">fi</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="built_in">echo</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="built_in">echo</span> <span class="string">&quot;exec \&quot;cat <span class="variable">$LOG</span> | grep -a <span class="variable">$&#123;args_filter[*]&#125;</span>\&quot;&quot;</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="built_in">echo</span></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">开始查日志</span></span><br><span class="line">cat $LOG | grep -a &quot;$&#123;args_filter[@]&#125;&quot; | sort -k4</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>log</category>
+      </categories>
+      <tags>
+        <tag>shell</tag>
+        <tag>log</tag>
+        <tag>cat</tag>
+        <tag>grep</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>nginx&amp;ubuntu 安装使用</title>
+    <url>/2024/09/20/nginx-conf/</url>
+    <content><![CDATA[<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">部署环境：Ubuntu 22.04 LTS (GNU/Linux 5.15.0-94-generic x86_64)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="1-安装"><a href="#1-安装" class="headerlink" title="1.安装"></a>1.安装</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo apt-get install nginx # 默认配制放在 /etc/nginx/sites-enabled/default</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-常用指令"><a href="#2-常用指令" class="headerlink" title="2. 常用指令"></a>2. 常用指令</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo systemctl enable nginx.service # 开机自启动</span><br><span class="line">sudo systemctl start nginx.service</span><br><span class="line">sudo systemctl status nginx.service</span><br><span class="line">sudo systemctl stop nginx.service</span><br><span class="line">sudo systemctl restart nginx.service</span><br><span class="line">sudo journalctl -fu nginx.service # 查看运行日志</span><br><span class="line"></span><br><span class="line">sudo nginx -t # 查看nginx配制是否生效</span><br><span class="line">sudo nginx -s stop | quit | reopen | reload # 常用指令</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-配制代理"><a href="#3-配制代理" class="headerlink" title="3. 配制代理"></a>3. 配制代理</h2><ul>
+<li>前端</li>
+<li>后端：网关，单体应用</li>
+<li>直接上配制</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 80 default_server;</span><br><span class="line">    listen [::]:80 default_server;</span><br><span class="line"></span><br><span class="line">    # Add index.php to the list if you are using PHP</span><br><span class="line">    index index.html index.htm index.nginx-debian.html;</span><br><span class="line"></span><br><span class="line">    server_name _;</span><br><span class="line"></span><br><span class="line">    location ^~ /gateway/ &#123;</span><br><span class="line">        proxy_pass http://localhost:20000/gateway/;</span><br><span class="line">        proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">        proxy_set_header X-Forward-For $remote_addr;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    location ^~ /oss/ &#123;</span><br><span class="line">        proxy_pass http://localhost:20011/;</span><br><span class="line">        proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">        proxy_set_header X-Forward-For $remote_addr;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    location ^~ /ws/ &#123;</span><br><span class="line">        proxy_pass http://localhost:20011/;</span><br><span class="line">        proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">        proxy_set_header X-Forward-For $remote_addr;</span><br><span class="line">        proxy_http_version 1.1;  # 必须设置为1.1以支持WebSocket</span><br><span class="line">        proxy_set_header Upgrade $http_upgrade;  # 设置Upgrade头</span><br><span class="line">        proxy_set_header Connection &quot;upgrade&quot;;   # 设置Connection头</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    location / &#123;  # Vue应用的访问路径; 如果需要配制前缀,例如 /web，需要在Vue应用打包时指定前缀，这样才能反向代理成功</span><br><span class="line">        root /home/ubuntu/web/dist;</span><br><span class="line">        index index.html index.htm;</span><br><span class="line">        try_files $uri $uri/ /index.html =404;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>nginx</category>
+      </categories>
+      <tags>
+        <tag>nginx</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>shell脚本参数说明</title>
+    <url>/2023/12/02/shell-params-demo/</url>
+    <content><![CDATA[<ul>
+<li><code>$$</code><ul>
+<li>Shell本身的PID（ProcessID）</li>
+</ul>
+</li>
+<li><code>$!</code><ul>
+<li>Shell最后运行的后台Process的PID</li>
+</ul>
+</li>
+<li><code>$?</code><ul>
+<li>最后运行的命令的结束代码（返回值）</li>
+</ul>
+</li>
+<li><code>$-</code><ul>
+<li>使用Set命令设定的Flag一览</li>
+</ul>
+</li>
+<li><code>$*</code><ul>
+<li>所有参数列表。如”$*”用「”」括起来的情况、以”$1 $2 … $n”的形式输出所有参数。</li>
+</ul>
+</li>
+<li><code>$@</code><ul>
+<li>所有参数列表。如”$@”用「”」括起来的情况、以”$1” “$2” … “$n” 的形式输出所有参数。</li>
+</ul>
+</li>
+<li><code>$#</code><ul>
+<li>添加到Shell的参数个数</li>
+</ul>
+</li>
+<li><code>$0</code><ul>
+<li>Shell本身的文件名</li>
+</ul>
+</li>
+<li><code>$1</code>～<code>$n</code><ul>
+<li>添加到Shell的各参数值。$1是第1参数、$2是第2参数…。</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>shell</category>
+      </categories>
+      <tags>
+        <tag>shell</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ubuntu 配制</title>
+    <url>/2024/09/20/ubuntu-build-env/</url>
+    <content><![CDATA[<h2 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h2><ul>
+<li>喜欢折腾一些 linux 系统, 所以记录一下自己折腾 ubuntu 的一些笔记。</li>
+</ul>
+<h2 id="2-内容"><a href="#2-内容" class="headerlink" title="2. 内容"></a>2. 内容</h2><ul>
+<li><p>更换镜像源：</p>
+</li>
+</ul>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line"><span class="bullet">-</span> etcd (代理)</span><br><span class="line"><span class="bullet">-</span> mysql (docker 可docker部署 在 docker/middleware 下)</span><br><span class="line"><span class="bullet">-</span> redis (docker 可docker部署 在 docker/middleware 下)</span><br><span class="line"><span class="bullet">-</span> nginx (部署网关 反向代理)</span><br><span class="line"><span class="bullet">-</span> supervisor (项目管理工具)</span><br><span class="line"><span class="bullet">-</span> 安装 clash for linux, https://github.com/Dreamacro/clash/releases/tag/v1.17.0, or https://500ml.name</span><br><span class="line"><span class="bullet">-</span> 安装 brew，rm Homebrew.sh ; wget https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh ; bash Homebrew.sh</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">rz sz</span></span><br><span class="line">apt-get install lrzsz</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">curl</span></span><br><span class="line">apt-get install curl</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">vim</span></span><br><span class="line">apt-get install vim</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">安装中间件 安装的应用都放在 /etc 下, 使用 sudo systemctl status 应用名字 查看应用状态</span></span><br><span class="line">sudo apt-get install etcd</span><br><span class="line"></span><br><span class="line">sudo apt-get install redis</span><br><span class="line"></span><br><span class="line">sudo apt-get install nginx # 默认配制放在 /etc/nginx/sites-enabled/default</span><br><span class="line"></span><br><span class="line">sudo apt-get install docker</span><br><span class="line">sudo apt-get install docker-compose</span><br><span class="line"></span><br><span class="line">sudo apt-get install supervisor</span><br><span class="line">cat /etc/supervisor/supervisord.conf # 查看配置文件是不是以.conf结尾</span><br><span class="line"></span><br><span class="line">sudo apt-get install golang-1.20-go</span><br><span class="line">sudo go env -w GOPROXY=https://goproxy.cn,direct</span><br><span class="line"></span><br><span class="line">cd /docker/middleware &amp;&amp; sudo docker-compose up -d</span><br><span class="line">sudo docker ps</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">k3s</span></span><br><span class="line">curl -sfL https://get.k3s.io | sh -</span><br><span class="line">mkdir -p $HOME/.kube</span><br><span class="line">sudo cp /etc/rancher/k3s/k3s.* $HOME/.kube/config</span><br><span class="line">sudo chown $(id -u):$(id -g) $HOME/.kube/config</span><br><span class="line"></span><br><span class="line">curl –sfL \</span><br><span class="line">  https://rancher-mirror.oss-cn-beijing.aliyuncs.com/k3s/k3s-install.sh |</span><br><span class="line">  INSTALL_K3S_MIRROR=cn sh -s - \</span><br><span class="line">    --system-default-registry &quot;registry.cn-hangzhou.aliyuncs.com&quot; \</span><br><span class="line">    --write-kubeconfig ~/.kube/config \</span><br><span class="line">    --write-kubeconfig-mode 666 \</span><br><span class="line">    --disable traefik</span><br><span class="line"></span><br><span class="line">systemctl status k3s.service</span><br><span class="line">kubectl get pods -n kube-system</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>ubuntu</category>
+      </categories>
+      <tags>
+        <tag>ubuntu</tag>
+      </tags>
+  </entry>
+</search>
